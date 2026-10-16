@@ -1,0 +1,52 @@
+# 世界知识 / 传闻库（文档 §3.3 社会信息、§3.4 世界知识）
+# 每条带 topics（决定哪些角色可知）、source 与 confidence。
+# 规则：角色 only 知道 topics 与自身 knowledge_scope 有交集的条目。
+# 因此 topics 必须"贴切且精简"——多贴一个不相关的标签就会造成知识越界。
+
+- id: lore_greyharbor_intro
+  topics: [城镇传闻]
+  text: 灰港是王国东境的边境城镇，靠一条通往雾谷的山道吃税。近来商队变少，人心浮动。
+  source: public_knowledge
+  confidence: 1.0
+
+- id: lore_missing_apprentice
+  topics: [城镇传闻]
+  text: 药剂师艾琳的学徒小陶半个月前出门采药，此后再没回来。有人说在旧市集见过他，也有人说他往北门去了。
+  source: rumor
+  confidence: 0.6
+
+- id: lore_smuggling
+  topics: [治安, 派系]
+  text: 近半月灰港北门夜里有来路不明的货车进出，传闻有内应给走私贩通风报信。
+  source: rumor
+  confidence: 0.5
+
+- id: lore_silverleaf
+  topics: [药材]
+  text: 银叶草只长在雾谷背阴的石缝里，需趁露水未干采下，是退烧药的主料，市价大约三十枚银币一份。
+  source: knowledge
+  confidence: 0.9
+
+- id: lore_northgate_curfew
+  topics: [城门, 治安]
+  text: 北门日落前一个时辰宵禁。宵禁后无卫队长手令不得通行。
+  source: rule
+  confidence: 1.0
+
+- id: lore_bandit_road
+  topics: [城镇传闻]
+  text: 通往雾谷的山道上近来有匪徒出没，商队宁可绕远路也不走那条道。
+  source: rumor
+  confidence: 0.4
+
+- id: lore_fog_valley
+  topics: [药材]
+  text: 雾谷在灰港以北半日脚程，谷中终年有水汽，蛇虫多而药材也最全。
+  source: knowledge
+  confidence: 0.85
+
+- id: lore_factions
+  topics: [派系]
+  text: 灰港有两股势力较劲：掌城的商会，与听命于王都的卫队。两边都在拉拢中间人。
+  source: rumor
+  confidence: 0.5

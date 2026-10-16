@@ -1,0 +1,159 @@
+/* drama-card 样式 */
+
+.dcard {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 6rpx 24rpx rgba(31, 35, 41, 0.06);
+  margin-bottom: 20rpx;
+}
+
+/* ---- 封面 ---- */
+.dcard__cover {
+  position: relative;
+  flex: none;
+  width: 160rpx;
+  height: 214rpx;
+  border-radius: 14rpx;
+  overflow: hidden;
+}
+
+.dcard__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.dcard__ph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 12rpx;
+  box-sizing: border-box;
+}
+
+.dcard__ph-text {
+  color: rgba(255, 255, 255, 0.96);
+  font-size: 24rpx;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.dcard__badge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 16rpx 10rpx 6rpx;
+  font-size: 18rpx;
+  color: #fff;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.66), rgba(0, 0, 0, 0));
+}
+
+/* ---- 信息区 ---- */
+.dcard__body {
+  flex: 1;
+  min-width: 0;
+  padding: 0 20rpx;
+}
+
+.dcard__title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1f2329;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dcard__meta {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: #9aa0a6;
+}
+
+.dcard__cat { margin-right: 16rpx; }
+.dcard__heat { color: #ff7a45; }
+
+.dcard__reason {
+  display: inline-block;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-top: 12rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  color: #ff4d4f;
+  background: rgba(255, 77, 79, 0.08);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dcard__tags { margin-top: 12rpx; }
+
+.dcard__tag {
+  display: inline-block;
+  margin-right: 10rpx;
+  padding: 3rpx 12rpx;
+  border-radius: 6rpx;
+  font-size: 20rpx;
+  color: #646a73;
+  background: #f2f3f5;
+}
+
+/* ---- 操作区 ---- */
+.dcard__action {
+  flex: none;
+  padding-left: 8rpx;
+}
+
+.dcard__btn {
+  padding: 12rpx 26rpx;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  white-space: nowrap;
+}
+
+.dcard__btn.is-add {
+  color: #fff;
+  background: linear-gradient(135deg, #ff4d4f, #ff7a45);
+}
+
+.dcard__btn.is-done {
+  color: #9aa0a6;
+  background: #f2f3f5;
+}
+
+/* ---- hero 竖版 ---- */
+.dcard--hero {
+  flex-direction: column;
+  align-items: stretch;
+  width: 260rpx;
+  padding: 0 0 16rpx;
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
+.dcard--hero .dcard__cover {
+  width: 100%;
+  height: 340rpx;
+  border-radius: 20rpx 20rpx 0 0;
+}
+
+.dcard--hero .dcard__body {
+  padding: 14rpx 16rpx 0;
+}
+
+.dcard--hero .dcard__title {
+  font-size: 28rpx;
+}
+
+.dcard--hero .dcard__action {
+  padding: 0 16rpx;
+}

@@ -1,0 +1,64 @@
+<view class="page">
+  <!-- 品牌头 -->
+  <view class="hero-head">
+    <view class="hero-head__title">红果追剧助手</view>
+    <view class="hero-head__sub">追你爱看的短剧，一更新就提醒你</view>
+    <view class="index__mode">
+      <text>{{mode === 'real' ? '● 实时数据' : '● 本地演示数据'}}</text>
+    </view>
+  </view>
+
+  <!-- 搜索入口 -->
+  <view class="index__search" bindtap="onGoDiscover">
+    <text class="index__search-icon">🔍</text>
+    <text class="index__search-ph">搜索短剧名 / 演员 / 标签</text>
+  </view>
+
+  <view class="container">
+    <!-- 热播榜 -->
+    <view class="section">
+      <view class="section__hd">
+        <text class="section__title">🔥 热播榜</text>
+        <text class="section__more" bindtap="onGoDiscover">发现更多 ›</text>
+      </view>
+      <scroll-view class="index__hot" scroll-x>
+        <view class="index__hot-item" wx:for="{{hot}}" wx:key="id">
+          <drama-card
+            drama="{{item}}"
+            layout="hero"
+            showAction="{{false}}"
+            subscribed="{{subscribedMap[item.id]}}"
+            bind:cardtap="onTapCard"
+          />
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 猜你喜欢 -->
+    <view class="section">
+      <view class="section__hd">
+        <view class="index__hd-left">
+          <text class="section__title">✨ 猜你喜欢</text>
+          <text class="index__hint">{{subCount > 0 ? '基于你的追剧口味' : '追几部剧后会推荐得更准'}}</text>
+        </view>
+        <text class="section__more" bindtap="onGoLibrary">我的追剧 ›</text>
+      </view>
+
+      <drama-card
+        wx:for="{{recommend}}"
+        wx:key="drama.id"
+        drama="{{item.drama}}"
+        reason="{{item.reason}}"
+        subscribed="{{subscribedMap[item.drama.id]}}"
+        bind:cardtap="onTapCard"
+        bind:subscribetap="onTapSubscribe"
+      />
+    </view>
+
+    <view wx:if="{{!loading && recommend.length === 0}}" class="empty">
+      <view class="empty__icon">🎬</view>
+      <view class="empty__text">暂时没有推荐内容</view>
+      <view class="empty__hint">下拉刷新试试</view>
+    </view>
+  </view>
+</view>

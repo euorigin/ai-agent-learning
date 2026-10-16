@@ -1,0 +1,8 @@
+# 依赖与工具
+node_modules/
+.workbuddy/
+
+# 微信开发者工具本地产物
+miniprogram/miniprogram_npm/
+.DS_Store
+*.log

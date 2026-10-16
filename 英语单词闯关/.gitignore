@@ -1,0 +1,21 @@
+# 环境与密钥
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# 词库构建中间产物（由 tools/fetch-wordlib.py + build-wordlib.py 重新生成）
+.build-wordlib/
+
+# 运行产物
+*.log
+tmp/
+temp/
+*.tmp
+
+# 编辑器 / 系统
+.workbuddy/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

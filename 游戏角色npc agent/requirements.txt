@@ -1,0 +1,6 @@
+# 运行期依赖（均已在托管 venv 中预装）
+fastapi>=0.110
+uvicorn>=0.27
+pydantic>=2.6
+PyYAML>=6.0
+httpx>=0.26

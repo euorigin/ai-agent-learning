@@ -1,0 +1,98 @@
+<view wx:if="{{drama}}" class="page detail">
+  <!-- 头部信息 -->
+  <view class="detail__hero">
+    <view class="detail__cover">
+      <image wx:if="{{drama.cover}}" class="detail__img" src="{{drama.cover}}" mode="aspectFill" />
+      <view wx:else class="detail__ph">{{drama.title}}</view>
+    </view>
+
+    <view class="detail__info">
+      <view class="detail__title">{{drama.title}}</view>
+      <view class="detail__meta">
+        <text class="detail__cat">{{drama.category}}</text>
+        <text class="detail__heat">🔥 {{heatText}}</text>
+      </view>
+      <view class="detail__status">
+        {{drama.status === 'finished'
+          ? ('已完结 · 全 ' + drama.episodeCount + ' 集')
+          : ('连载中 · 更新至第 ' + drama.episodeCount + ' 集')}}
+      </view>
+      <view wx:if="{{drama.updatePolicy}}" class="detail__policy">{{drama.updatePolicy}}</view>
+      <view wx:if="{{drama.actors.length}}" class="detail__actors">
+        主演：{{drama.actors[0]}}{{drama.actors[1] ? ' / ' + drama.actors[1] : ''}}
+      </view>
+    </view>
+  </view>
+
+  <view class="container">
+    <!-- 订阅进度提示 -->
+    <view wx:if="{{subscribed}}" class="detail__tip">
+      <text class="detail__tip-text">你看到第 {{seenEpisode}} 集，已更新到第 {{drama.episodeCount}} 集</text>
+      <text class="detail__tip-btn" bindtap="onMarkSeen">标记看完</text>
+    </view>
+
+    <!-- 简介 -->
+    <view class="section">
+      <view class="section__hd"><text class="section__title">简介</text></view>
+      <view class="detail__intro">{{drama.intro || '暂无简介'}}</view>
+    </view>
+
+    <!-- 标签 -->
+    <view wx:if="{{drama.tags.length}}" class="section">
+      <view class="section__hd"><text class="section__title">标签</text></view>
+      <view class="detail__tags">
+        <block wx:for="{{drama.tags}}" wx:key="*this">
+          <text class="tag tag--hot">{{item}}</text>
+        </block>
+      </view>
+    </view>
+
+    <!-- 选集 -->
+    <view wx:if="{{episodes.length}}" class="section">
+      <view class="section__hd">
+        <text class="section__title">选集</text>
+        <text class="section__more">{{episodeStart === 1 ? '' : '（仅显示最近 60 集）'}}共 {{drama.episodeCount}} 集</text>
+      </view>
+      <view class="detail__episodes">
+        <view
+          wx:for="{{episodes}}"
+          wx:key="no"
+          class="detail__ep {{item.isNew ? 'is-new' : ''}}"
+          data-no="{{item.no}}"
+          bindtap="onTapEpisode"
+        >{{item.no}}</view>
+      </view>
+    </view>
+
+    <!-- 同类推荐 -->
+    <view wx:if="{{similar.length}}" class="section">
+      <view class="section__hd"><text class="section__title">✨ 同类推荐</text></view>
+      <scroll-view class="detail__similar" scroll-x>
+        <view class="detail__similar-item" wx:for="{{similar}}" wx:key="id">
+          <drama-card
+            drama="{{item}}"
+            layout="hero"
+            showAction="{{false}}"
+            bind:cardtap="onTapSimilar"
+          />
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 底部常驻操作栏 -->
+  <view class="detail__bottom">
+    <view
+      class="detail__bottom-main btn {{subscribed ? 'btn--ghost' : 'btn--brand'}}"
+      bindtap="onToggleSubscribe"
+    >
+      {{subscribed ? '已追剧 · 点击取消' : '＋ 追剧，更新提醒我'}}
+    </view>
+    <view class="detail__bottom-side btn btn--ghost" bindtap="onGoWatch">去红果观看</view>
+  </view>
+</view>
+
+<view wx:else class="empty">
+  <view class="empty__icon">🎬</view>
+  <view class="empty__text">{{loading ? '加载中…' : '没有找到这部剧'}}</view>
+</view>

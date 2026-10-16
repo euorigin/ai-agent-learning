@@ -1,0 +1,64 @@
+/* 首页样式 */
+
+.index__mode {
+  display: inline-block;
+  margin-top: 20rpx;
+  padding: 6rpx 18rpx;
+  border-radius: 999rpx;
+  font-size: 20rpx;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.24);
+}
+
+/* 搜索框：上浮压住品牌头 */
+.index__search {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  height: 84rpx;
+  margin: -46rpx 24rpx 24rpx;
+  padding: 0 26rpx;
+  background: #fff;
+  border-radius: 999rpx;
+  box-shadow: 0 8rpx 26rpx rgba(31, 35, 41, 0.10);
+}
+
+.index__search-icon {
+  margin-right: 12rpx;
+  font-size: 30rpx;
+}
+
+.index__search-ph {
+  font-size: 27rpx;
+  color: #9aa0a6;
+}
+
+/* 热播横滚 */
+.index__hot {
+  white-space: nowrap;
+  padding: 6rpx 24rpx 20rpx;
+}
+
+.index__hot::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.index__hot-item {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 20rpx;
+}
+
+.index__hd-left {
+  display: flex;
+  align-items: baseline;
+}
+
+.index__hint {
+  margin-left: 14rpx;
+  font-size: 22rpx;
+  color: #9aa0a6;
+}

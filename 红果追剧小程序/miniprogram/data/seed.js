@@ -1,0 +1,290 @@
+/**
+ * 种子数据（本地演示库）
+ *
+ * 统一结构（真实源 normalize 后必须与此一致）：
+ *  id            String   唯一 ID
+ *  title         String   剧名
+ *  cover         String   封面图 URL（可空，空则前端用渐变兜底）
+ *  intro         String   简介
+ *  category      String   主分类
+ *  tags          String[] 标签（推荐算法的核心特征）
+ *  actors        String[] 主演
+ *  episodeCount  Number   总集数 / 当前更新到的集数
+ *  status        String   'ongoing' | 'finished'
+ *  updatePolicy  String   更新节奏文案
+ *  heat          Number   热度值
+ *  updatedAt     String   最近更新日期
+ *  source        String   'seed'
+ */
+module.exports = [
+  {
+    id: 'hg1001',
+    title: '总裁的替嫁新娘',
+    cover: 'https://picsum.photos/seed/hg1001/360/480',
+    intro: '被亲爹丢在乡下十六年的顾轻舟，因继姐抢婚被接回城里。所有人都当她是好拿捏的乡下丫头，却不知她身怀绝技——中医、枪法、礼仪样样精通，扮猪吃老虎的复仇局，才刚刚开始。',
+    category: '现代言情',
+    tags: ['甜宠', '总裁', '先婚后爱', '扮猪吃虎', '逆袭'],
+    actors: ['林晚', '陆时衍'],
+    episodeCount: 92,
+    status: 'ongoing',
+    updatePolicy: '每日更新 2 集',
+    heat: 98600,
+    updatedAt: '2026-10-07',
+    source: 'seed'
+  },
+  {
+    id: 'hg1002',
+    title: '重生之商界女王',
+    cover: 'https://picsum.photos/seed/hg1002/360/480',
+    intro: '被丈夫和闺蜜联手夺走一切的她，重生回到订婚宴当晚。这一次，她带着未来的商业版图，把所有算计她的人一个个送进深渊。',
+    category: '都市逆袭',
+    tags: ['重生', '逆袭', '大女主', '打脸', '复仇'],
+    actors: ['苏婉', '沈墨白'],
+    episodeCount: 108,
+    status: 'ongoing',
+    updatePolicy: '每日更新 3 集',
+    heat: 87400,
+    updatedAt: '2026-10-08',
+    source: 'seed'
+  },
+  {
+    id: 'hg1003',
+    title: '医妃惊天下',
+    cover: 'https://picsum.photos/seed/hg1003/360/480',
+    intro: '现代急诊科医生一朝穿越，成了被退婚的落魄嫡女。一根银针走遍朝堂江湖，救得了病、斗得了权，也顺走了一位冷面王爷的心。',
+    category: '古装宫廷',
+    tags: ['古风', '穿越', '神医', '甜宠', '爽文'],
+    actors: ['温如故', '萧珩'],
+    episodeCount: 96,
+    status: 'ongoing',
+    updatePolicy: '每日更新 2 集',
+    heat: 82100,
+    updatedAt: '2026-10-08',
+    source: 'seed'
+  },
+  {
+    id: 'hg1004',
+    title: '战神归来',
+    cover: 'https://picsum.photos/seed/hg1004/360/480',
+    intro: '五年前他被逐出家门，五年后他带着满身军功回到这座城。所有人都以为他是个落魄废人，直到那枚战区勋章被无意间翻开。',
+    category: '战神归来',
+    tags: ['战神', '扮猪吃虎', '逆袭', '高燃', '打脸'],
+    actors: ['江战', '柳清欢'],
+    episodeCount: 120,
+    status: 'ongoing',
+    updatePolicy: '每日更新 4 集',
+    heat: 79300,
+    updatedAt: '2026-10-08',
+    source: 'seed'
+  },
+  {
+    id: 'hg1005',
+    title: '豪门总裁的隐婚妻',
+    cover: 'https://picsum.photos/seed/hg1005/360/480',
+    intro: '领证三年，她从不敢对外提起自己的丈夫是谁。直到那天集团年会上，那个高居首位的男人当着全场媒体，走向了角落里端盘子的她。',
+    category: '现代言情',
+    tags: ['总裁', '隐婚', '甜宠', '追妻火葬场', '双向奔赴'],
+    actors: ['顾栖', '傅寒川'],
+    episodeCount: 88,
+    status: 'finished',
+    updatePolicy: '已完结',
+    heat: 71200,
+    updatedAt: '2026-09-21',
+    source: 'seed'
+  },
+  {
+    id: 'hg1006',
+    title: '通灵王妃',
+    cover: 'https://picsum.photos/seed/hg1006/360/480',
+    intro: '她生来能看见别人看不见的东西，被全城当作灾星。嫁入王府后，她随手点破的桩桩怪事，竟牵出二十年前的一桩血案。',
+    category: '玄幻仙侠',
+    tags: ['仙侠', '古风', '团宠', '爽文', '甜宠'],
+    actors: ['白净璃', '云铮'],
+    episodeCount: 76,
+    status: 'ongoing',
+    updatePolicy: '每周更新 5 集',
+    heat: 66800,
+    updatedAt: '2026-10-06',
+    source: 'seed'
+  },
+  {
+    id: 'hg1007',
+    title: '我的老板是首富',
+    cover: 'https://picsum.photos/seed/hg1007/360/480',
+    intro: '入职第一天她就发现，那个天天跟她抢电梯、吃泡面加班的秃头同事，居然是公司真正的老板。而她的转正考核，是他亲手设的局。',
+    category: '都市逆袭',
+    tags: ['职场', '逆袭', '打脸', '甜宠', '搞笑'],
+    actors: ['夏安宁', '周砚'],
+    episodeCount: 84,
+    status: 'ongoing',
+    updatePolicy: '每日更新 2 集',
+    heat: 64500,
+    updatedAt: '2026-10-08',
+    source: 'seed'
+  },
+  {
+    id: 'hg1008',
+    title: '深宅谜案',
+    cover: 'https://picsum.photos/seed/hg1008/360/480',
+    intro: '一座百年老宅，连续三任管家死于同一间屋子。受邀前来鉴画的修复师，发现每一任死者留下的画，都藏着下一个人的死期。',
+    category: '悬疑推理',
+    tags: ['悬疑', '反转', '推理', '复仇'],
+    actors: ['沈聿', '林知夏'],
+    episodeCount: 64,
+    status: 'finished',
+    updatePolicy: '已完结',
+    heat: 58900,
+    updatedAt: '2026-09-12',
+    source: 'seed'
+  },
+  {
+    id: 'hg1009',
+    title: '学霸的逆袭人生',
+    cover: 'https://picsum.photos/seed/hg1009/360/480',
+    intro: '被全校当成垫底差生的他，转学第一天就交出了满分的竞赛卷。没人知道，他脑子里装着一整座图书馆。',
+    category: '青春校园',
+    tags: ['校园', '学霸', '逆袭', '青春', '打脸'],
+    actors: ['陈屿', '许星禾'],
+    episodeCount: 72,
+    status: 'ongoing',
+    updatePolicy: '每周更新 6 集',
+    heat: 55200,
+    updatedAt: '2026-10-05',
+    source: 'seed'
+  },
+  {
+    id: 'hg1010',
+    title: '离婚后她惊艳全球',
+    cover: 'https://picsum.photos/seed/hg1010/360/480',
+    intro: '签完离婚协议那天，她摘下婚戒，露出了藏在无名指内侧的家族印记。三个月后，全球财经头条上出现了一个熟悉的名字。',
+    category: '现代言情',
+    tags: ['大女主', '逆袭', '离婚', '马甲', '打脸'],
+    actors: ['温言', '霍聿'],
+    episodeCount: 100,
+    status: 'ongoing',
+    updatePolicy: '每日更新 3 集',
+    heat: 73100,
+    updatedAt: '2026-10-08',
+    source: 'seed'
+  },
+  {
+    id: 'hg1011',
+    title: '亿万老公宠上天',
+    cover: 'https://picsum.photos/seed/hg1011/360/480',
+    intro: '她只是去还一把伞，却还回来一个亿万家产的丈夫。从此全城都知道，得罪她等于得罪那位宠妻无度的男人。',
+    category: '现代言情',
+    tags: ['甜宠', '总裁', '团宠', '双向奔赴'],
+    actors: ['林小满', '秦屿'],
+    episodeCount: 80,
+    status: 'finished',
+    updatePolicy: '已完结',
+    heat: 49800,
+    updatedAt: '2026-08-30',
+    source: 'seed'
+  },
+  {
+    id: 'hg1012',
+    title: '冷宫弃妃',
+    cover: 'https://picsum.photos/seed/hg1012/360/480',
+    intro: '被打入冷宫那日，她烧掉了所有讨好的诗稿。三年后从冷宫走出来的人，让整座后宫换了天。',
+    category: '古装宫廷',
+    tags: ['古风', '复仇', '虐渣', '宫斗', '大女主'],
+    actors: ['姜昭', '萧承'],
+    episodeCount: 90,
+    status: 'ongoing',
+    updatePolicy: '每日更新 2 集',
+    heat: 61300,
+    updatedAt: '2026-10-08',
+    source: 'seed'
+  },
+  {
+    id: 'hg1013',
+    title: '我的老婆是战神',
+    cover: 'https://picsum.photos/seed/hg1013/360/480',
+    intro: '被家里逼着相亲结婚的普通程序员，婚后才发现，自己那位"温柔贤惠"的妻子，是全城闻风丧胆的那位。',
+    category: '战神归来',
+    tags: ['战神', '甜宠', '反转', '搞笑', '团宠'],
+    actors: ['许诺', '顾北辰'],
+    episodeCount: 78,
+    status: 'ongoing',
+    updatePolicy: '每日更新 2 集',
+    heat: 52400,
+    updatedAt: '2026-10-07',
+    source: 'seed'
+  },
+  {
+    id: 'hg1014',
+    title: '全家读我心声后',
+    cover: 'https://picsum.photos/seed/hg1014/360/480',
+    intro: '觉醒读心术后，她才发现全家人早就知道她在想什么——包括那些没说出口的委屈。于是，这个家开始悄悄变了。',
+    category: '家庭伦理',
+    tags: ['亲情', '团宠', '搞笑', '重生', '治愈'],
+    actors: ['念念', '顾家众人'],
+    episodeCount: 68,
+    status: 'ongoing',
+    updatePolicy: '每周更新 4 集',
+    heat: 47600,
+    updatedAt: '2026-10-04',
+    source: 'seed'
+  },
+  {
+    id: 'hg1015',
+    title: '民间诡事录',
+    cover: 'https://picsum.photos/seed/hg1015/360/480',
+    intro: '一桩桩乡野怪谈背后，都站着同一个不愿被提起的人。记录者每写完一个故事，就会有人来找他——包括不该来的那些。',
+    category: '悬疑推理',
+    tags: ['悬疑', '民俗', '单元剧', '反转'],
+    actors: ['陆怀', '阿箬'],
+    episodeCount: 56,
+    status: 'finished',
+    updatePolicy: '已完结',
+    heat: 41500,
+    updatedAt: '2026-08-18',
+    source: 'seed'
+  },
+  {
+    id: 'hg1016',
+    title: '仙尊重回地球',
+    cover: 'https://picsum.photos/seed/hg1016/360/480',
+    intro: '渡劫失败的他重回到二十岁那年。那时他还是个被人当众羞辱的穷学生——而现在，他脑子里装着十万年的修行。',
+    category: '玄幻仙侠',
+    tags: ['仙侠', '重生', '扮猪吃虎', '高燃', '打脸'],
+    actors: ['叶辰', '苏清月'],
+    episodeCount: 110,
+    status: 'ongoing',
+    updatePolicy: '每日更新 3 集',
+    heat: 69400,
+    updatedAt: '2026-10-08',
+    source: 'seed'
+  },
+  {
+    id: 'hg1017',
+    title: '都市医仙',
+    cover: 'https://picsum.photos/seed/hg1017/360/480',
+    intro: '乡下来的小中医，第一天坐诊就把大医院判了"没救"的病人救了回来。从此门前排队的人，从街头排到了街尾。',
+    category: '都市逆袭',
+    tags: ['神医', '逆袭', '扮猪吃虎', '打脸', '爽文'],
+    actors: ['林川', '夏织'],
+    episodeCount: 94,
+    status: 'ongoing',
+    updatePolicy: '每日更新 2 集',
+    heat: 58200,
+    updatedAt: '2026-10-08',
+    source: 'seed'
+  },
+  {
+    id: 'hg1018',
+    title: '娇娇不好惹',
+    cover: 'https://picsum.photos/seed/hg1018/360/480',
+    intro: '被换出豪门的真千金回来了。所有人都等着看她怎么被假千金比下去，结果第一个被请出家门的，是那个假千金。',
+    category: '古装宫廷',
+    tags: ['古风', '团宠', '甜宠', '复仇', '大女主'],
+    actors: ['宋娇', '裴钰'],
+    episodeCount: 86,
+    status: 'ongoing',
+    updatePolicy: '每周更新 5 集',
+    heat: 43900,
+    updatedAt: '2026-10-03',
+    source: 'seed'
+  }
+]

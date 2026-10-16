@@ -1,0 +1,107 @@
+/* 消息中心样式 */
+
+.msg__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 32rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #f3f0ef;
+}
+
+.msg__title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1f2329;
+}
+
+.msg__sub {
+  margin-left: 14rpx;
+  font-size: 24rpx;
+  color: #9aa0a6;
+}
+
+.msg__actions {
+  display: flex;
+  align-items: center;
+}
+
+.msg__action {
+  margin-left: 24rpx;
+  font-size: 26rpx;
+  color: #ff4d4f;
+}
+
+/* 消息项 */
+.msgitem {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  padding: 26rpx 24rpx;
+  margin-bottom: 20rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 6rpx 24rpx rgba(31, 35, 41, 0.06);
+}
+
+.msgitem.is-unread {
+  background: #fff8f7;
+}
+
+.msgitem__icon {
+  flex: none;
+  width: 64rpx;
+  height: 64rpx;
+  margin-right: 20rpx;
+  border-radius: 50%;
+  background: rgba(255, 77, 79, 0.10);
+  font-size: 32rpx;
+  line-height: 64rpx;
+  text-align: center;
+}
+
+.msgitem__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.msgitem__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.msgitem__heading {
+  flex: 1;
+  min-width: 0;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1f2329;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.msgitem__time {
+  flex: none;
+  margin-left: 16rpx;
+  font-size: 22rpx;
+  color: #9aa0a6;
+}
+
+.msgitem__content {
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  color: #646a73;
+  line-height: 1.5;
+}
+
+.msgitem__dot {
+  position: absolute;
+  top: 26rpx;
+  right: 20rpx;
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: #ff4d4f;
+}

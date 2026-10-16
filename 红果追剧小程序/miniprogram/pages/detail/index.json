@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "drama-card": "../../components/drama-card/index"
+  },
+  "navigationBarTitleText": "短剧详情",
+  "backgroundTextStyle": "dark"
+}

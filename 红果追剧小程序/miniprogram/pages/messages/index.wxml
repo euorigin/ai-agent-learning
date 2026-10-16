@@ -1,0 +1,39 @@
+<view class="page">
+  <view class="msg__head">
+    <view>
+      <text class="msg__title">消息中心</text>
+      <text class="msg__sub">{{unread > 0 ? unread + ' 条未读' : '暂无未读'}}</text>
+    </view>
+    <view class="msg__actions">
+      <text class="msg__action" bindtap="onMarkAllRead">全部已读</text>
+      <text class="msg__action" bindtap="onClear">清空</text>
+    </view>
+  </view>
+
+  <view class="container">
+    <view
+      wx:for="{{list}}"
+      wx:key="id"
+      class="msgitem {{item.read ? '' : 'is-unread'}}"
+      data-id="{{item.id}}"
+      data-drama="{{item.dramaId}}"
+      bindtap="onTapItem"
+    >
+      <view class="msgitem__icon">🔔</view>
+      <view class="msgitem__body">
+        <view class="msgitem__top">
+          <text class="msgitem__heading">{{item.heading}}</text>
+          <text class="msgitem__time">{{item.timeText}}</text>
+        </view>
+        <view class="msgitem__content">{{item.content}}</view>
+      </view>
+      <view wx:if="{{!item.read}}" class="msgitem__dot"></view>
+    </view>
+
+    <view wx:if="{{list.length === 0}}" class="empty">
+      <view class="empty__icon">🔔</view>
+      <view class="empty__text">还没有消息</view>
+      <view class="empty__hint">追剧之后，有更新会在这里提醒你</view>
+    </view>
+  </view>
+</view>

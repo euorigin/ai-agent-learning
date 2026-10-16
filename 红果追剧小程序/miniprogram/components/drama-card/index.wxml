@@ -1,0 +1,46 @@
+<view wx:if="{{drama}}" class="dcard dcard--{{layout}}" bindtap="onTapCard">
+  <!-- 封面（失败 -> 渐变兜底） -->
+  <view
+    class="dcard__cover"
+    style="background: linear-gradient(135deg, hsl({{hue}}, 72%, 64%), hsl({{hue + 38}}, 68%, 52%));"
+  >
+    <image
+      wx:if="{{drama.cover && !imgErr}}"
+      class="dcard__img"
+      src="{{drama.cover}}"
+      mode="aspectFill"
+      lazy-load
+      binderror="onCoverError"
+    ></image>
+    <view wx:else class="dcard__ph">
+      <text class="dcard__ph-text">{{drama.title}}</text>
+    </view>
+
+    <view wx:if="{{drama.status === 'finished'}}" class="dcard__badge">全 {{drama.episodeCount}} 集</view>
+    <view wx:elif="{{drama.episodeCount}}" class="dcard__badge">更新至 {{drama.episodeCount}} 集</view>
+  </view>
+
+  <!-- 信息区 -->
+  <view class="dcard__body">
+    <view class="dcard__title">{{drama.title}}</view>
+
+    <view class="dcard__meta">
+      <text class="dcard__cat">{{drama.category}}</text>
+      <text class="dcard__heat">🔥 {{heatText}}</text>
+    </view>
+
+    <view wx:if="{{reason}}" class="dcard__reason">{{reason}}</view>
+    <view wx:else class="dcard__tags">
+      <block wx:for="{{drama.tags}}" wx:key="*this" wx:for-index="ti">
+        <text wx:if="{{ti < 3}}" class="dcard__tag">{{item}}</text>
+      </block>
+    </view>
+  </view>
+
+  <!-- 追剧按钮 -->
+  <view wx:if="{{showAction}}" class="dcard__action" catchtap="onTapAction">
+    <view class="dcard__btn {{subscribed ? 'is-done' : 'is-add'}}">
+      {{subscribed ? '已追' : '＋ 追剧'}}
+    </view>
+  </view>
+</view>

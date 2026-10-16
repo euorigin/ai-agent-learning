@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>旅行攻略 Agent 助手</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">✈</span>
+      <span>旅行攻略 Agent 助手</span>
+      <span class="ver">v2.0</span>
+    </div>
+    <div class="chips" id="statusChips"><span class="chip chip-muted">读取状态…</span></div>
+    <div class="actions">
+      <button id="btnExample" class="btn btn-ghost">填示例</button>
+      <button id="btnTools" class="btn btn-ghost">工具清单</button>
+      <button id="btnReload" class="btn btn-ghost">重载配置</button>
+    </div>
+  </header>
+
+  <div id="banner" class="banner hidden"></div>
+
+  <main class="grid">
+    <!-- 左：对话与输入 -->
+    <section class="panel panel-left">
+      <div class="panel-title">需求对话</div>
+      <div class="chat-log" id="chatLog">
+        <div class="msg msg-bot">
+          <div class="msg-body">
+            告诉我目的地和日期，我会拉取真实天气与路线，排出带时间轴、交通衔接和预算区间的行程。<br />
+            例如：<em>从北京出发，下周五去成都玩 4 天，预算 6000，喜欢美食和自然风光</em>
+          </div>
+        </div>
+      </div>
+
+      <form id="chatForm" class="composer">
+        <textarea id="chatInput" rows="3"
+          placeholder="输入你的需求（Ctrl/⌘ + Enter 发送）"></textarea>
+        <div class="composer-foot">
+          <span class="hint" id="engineHint"></span>
+          <button class="btn btn-primary" type="submit" id="btnSend">发送</button>
+        </div>
+      </form>
+
+      <div class="examples" id="examples"></div>
+
+      <details class="form-block">
+        <summary>结构化输入（跳过自然语言解析）</summary>
+        <div class="form-grid">
+          <label>出发地<input id="fOrigin" placeholder="北京" /></label>
+          <label>目的地（逗号分隔）<input id="fDest" placeholder="成都, 丽江" /></label>
+          <label>开始日期<input id="fStart" type="date" /></label>
+          <label>结束日期<input id="fEnd" type="date" /></label>
+          <label>总预算（元）<input id="fBudget" type="number" min="0" step="100" placeholder="6000" /></label>
+          <label>人数<input id="fTravelers" type="number" min="1" max="30" value="2" /></label>
+          <label>房间数<input id="fRooms" type="number" min="1" max="10" value="1" /></label>
+          <label>节奏
+            <select id="fPace">
+              <option value="relaxed">轻松</option>
+              <option value="normal" selected>适中</option>
+              <option value="intensive">紧凑</option>
+            </select>
+          </label>
+          <label>行动能力
+            <select id="fMobility">
+              <option value="normal" selected>正常</option>
+              <option value="reduced">行动不便 / 带老人</option>
+            </select>
+          </label>
+          <label class="span2">偏好（逗号分隔）
+            <input id="fPrefs" placeholder="自然风光, 美食, 博物馆" />
+          </label>
+        </div>
+        <button class="btn btn-primary" type="button" id="btnPlan">直接生成行程</button>
+      </details>
+    </section>
+
+    <!-- 右：行程 -->
+    <section class="panel panel-right">
+      <div class="plan-head">
+        <div class="plan-title" id="planTitle">还没有行程</div>
+        <div class="plan-tools">
+          <div class="tabs" id="tabs">
+            <button class="tab active" data-tab="days">行程</button>
+            <button class="tab" data-tab="budget">预算</button>
+            <button class="tab" data-tab="evidence">来源与提示</button>
+            <button class="tab" data-tab="trace">工具轨迹</button>
+          </div>
+          <button class="btn btn-ghost" id="btnExport" disabled>导出 MD</button>
+        </div>
+      </div>
+      <div class="plan-body" id="planBody">
+        <div class="empty">
+          <div class="empty-icon">🗺️</div>
+          <p>左侧说一句话，或展开「结构化输入」直接生成。</p>
+          <p class="hint">大模型负责理解需求与目的地知识；天气、路网、时间轴与预算由程序计算，数字不靠模型猜。</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="drawer hidden" id="drawer">
+  <div class="drawer-mask" data-close="1"></div>
+  <div class="drawer-panel">
+    <div class="drawer-head">
+      <strong id="drawerTitle">工具清单</strong>
+      <button class="btn btn-ghost" data-close="1">关闭</button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

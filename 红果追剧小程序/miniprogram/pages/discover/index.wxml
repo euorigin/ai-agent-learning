@@ -1,0 +1,77 @@
+<view class="page">
+  <!-- 搜索栏 -->
+  <view class="discover__bar">
+    <view class="discover__input-wrap">
+      <text class="discover__icon">🔍</text>
+      <input
+        class="discover__input"
+        value="{{keyword}}"
+        placeholder="搜索短剧名 / 标签 / 演员"
+        placeholder-class="discover__input-ph"
+        confirm-type="search"
+        bindinput="onInput"
+        bindconfirm="onSearch"
+      />
+      <text wx:if="{{keyword}}" class="discover__clear" bindtap="onClearSearch">✕</text>
+    </view>
+    <view class="discover__submit" bindtap="onSearch">搜索</view>
+  </view>
+
+  <!-- 热门搜索词 -->
+  <view wx:if="{{!searched}}" class="discover__hotkw">
+    <text class="discover__label">大家都在搜</text>
+    <view class="discover__kws">
+      <text
+        wx:for="{{hotKeywords}}"
+        wx:key="*this"
+        class="discover__kw"
+        data-kw="{{item}}"
+        bindtap="onTapKeyword"
+      >{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 分类 -->
+  <scroll-view class="discover__cats" scroll-x>
+    <view class="discover__cats-inner">
+      <text
+        wx:for="{{categories}}"
+        wx:key="*this"
+        class="discover__cat {{activeCategory === item ? 'is-active' : ''}}"
+        data-cat="{{item}}"
+        bindtap="onTapCategory"
+      >{{item}}</text>
+    </view>
+  </scroll-view>
+
+  <view class="container">
+    <view class="discover__count">
+      <text class="dim small">
+        {{searched && keyword ? '「' + keyword + '」的结果' : '全部剧集'}} · {{list.length}} 部
+      </text>
+      <text class="mode-pill {{mode === 'real' ? 'is-real' : ''}}">
+        {{mode === 'real' ? '实时数据' : '本地演示数据'}}
+      </text>
+    </view>
+
+    <drama-card
+      wx:for="{{list}}"
+      wx:key="id"
+      drama="{{item}}"
+      subscribed="{{subscribedMap[item.id]}}"
+      bind:cardtap="onTapCard"
+      bind:subscribetap="onTapSubscribe"
+    />
+
+    <view wx:if="{{!loading && list.length === 0}}" class="empty">
+      <view class="empty__icon">🔍</view>
+      <view class="empty__text">没有找到相关短剧</view>
+      <view class="empty__hint">换个关键词试试</view>
+    </view>
+
+    <view wx:if="{{loading}}" class="empty">
+      <view class="empty__icon">⏳</view>
+      <view class="empty__text">正在搜索…</view>
+    </view>
+  </view>
+</view>

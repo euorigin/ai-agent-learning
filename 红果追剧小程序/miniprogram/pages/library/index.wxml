@@ -1,0 +1,63 @@
+<view class="page">
+  <!-- 概览 -->
+  <view wx:if="{{list.length > 0}}" class="library__summary">
+    <view class="library__summary-main">
+      <text class="library__summary-num">{{list.length}}</text>
+      <text class="library__summary-label">部在追</text>
+    </view>
+    <view wx:if="{{pendingCount > 0}}" class="library__summary-tip">
+      🔔 {{pendingCount}} 部有新剧集
+    </view>
+    <view wx:else class="library__summary-tip is-ok">已全部同步</view>
+  </view>
+
+  <view class="container">
+    <view
+      wx:for="{{list}}"
+      wx:key="dramaId"
+      class="libitem"
+      data-id="{{item.dramaId}}"
+      bindtap="onTapItem"
+    >
+      <view
+        class="libitem__cover"
+        style="background: linear-gradient(135deg, hsl({{item.hue}}, 72%, 64%), hsl({{item.hue + 38}}, 68%, 52%));"
+      >
+        <image wx:if="{{item.cover}}" class="libitem__img" src="{{item.cover}}" mode="aspectFill" lazy-load />
+        <view wx:else class="libitem__ph">{{item.title}}</view>
+        <view wx:if="{{item.hasUpdate}}" class="libitem__dot"></view>
+      </view>
+
+      <view class="libitem__body">
+        <view class="libitem__title">{{item.title}}</view>
+        <view class="libitem__meta">{{item.category}}</view>
+        <view class="libitem__progress">{{item.progress}} · {{item.latestText}}</view>
+        <view wx:if="{{item.hasUpdate}}" class="libitem__update">有新剧集待看</view>
+      </view>
+
+      <view class="libitem__action" catchtap="onUnsubscribe" data-id="{{item.dramaId}}">
+        取消追剧
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{list.length === 0}}" class="empty">
+      <view class="empty__icon">📺</view>
+      <view class="empty__text">还没有在追的短剧</view>
+      <view class="empty__hint">去「发现」找一部开始追吧</view>
+      <view class="empty__btn btn btn--brand" bindtap="onGoDiscover">去发现好剧</view>
+    </view>
+
+    <!-- 工具区 -->
+    <view wx:if="{{list.length > 0}}" class="library__tools">
+      <view class="btn btn--ghost library__tool" bindtap="onCheckNow">
+        {{checking ? '检查中…' : '立即检查更新'}}
+      </view>
+      <view class="btn btn--ghost library__tool" bindtap="onSimulateUpdate">演示：模拟一次更新</view>
+    </view>
+
+    <view wx:if="{{list.length > 0}}" class="library__note">
+      说明：「模拟一次更新」用于演示更新提醒链路；接入真实数据源后，前台每次打开会自动检查。
+    </view>
+  </view>
+</view>

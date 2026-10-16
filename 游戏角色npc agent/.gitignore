@@ -1,0 +1,28 @@
+# 环境与密钥（真实 Key 只在 .env 里，绝不上传）
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# 运行产物
+*.log
+logs/
+.data/
+data/cache/
+*.db
+*.sqlite3
+
+# 编辑器 / 系统
+.workbuddy/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

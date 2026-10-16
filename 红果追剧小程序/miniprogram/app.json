@@ -1,0 +1,32 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/discover/index",
+    "pages/library/index",
+    "pages/messages/index",
+    "pages/detail/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "backgroundColor": "#f5f6f8",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTitleText": "红果追剧助手",
+    "navigationBarTextStyle": "black",
+    "enablePullDownRefresh": false
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#9aa0a6",
+    "selectedColor": "#ff4d4f",
+    "backgroundColor": "#ffffff",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "推荐" },
+      { "pagePath": "pages/discover/index", "text": "发现" },
+      { "pagePath": "pages/library/index", "text": "追剧" },
+      { "pagePath": "pages/messages/index", "text": "消息" }
+    ]
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

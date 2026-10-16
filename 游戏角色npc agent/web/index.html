@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>灰港 · NPC Agent 调试台</title>
+<link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">灰</span>
+    <div>
+      <h1>NPC Agent 调试台</h1>
+      <p class="sub">游戏角色 NPC Agent 需求分析与技术路线 · MVP</p>
+    </div>
+  </div>
+  <div class="top-right">
+    <span id="engineBadge" class="badge">加载中…</span>
+    <button id="btnExport" class="ghost">导出 Markdown</button>
+  </div>
+</header>
+
+<section class="npcs" id="npcBar"></section>
+
+<main class="layout">
+  <section class="panel chat-panel">
+    <div class="panel-head">
+      <div>
+        <h2 id="chatTitle">对话</h2>
+        <p class="muted" id="chatHint">选一个角色开始交谈。所有状态变更都由服务端权威确认。</p>
+      </div>
+      <button id="btnReset" class="ghost small">清空会话</button>
+    </div>
+    <div id="messages" class="messages"></div>
+    <form id="composer" class="composer">
+      <input id="input" type="text" autocomplete="off"
+             placeholder="说点什么…（例：我想接这个委托 q_102 / 银叶草多少钱一份？/ 开城门）" />
+      <button type="submit" class="primary">发送</button>
+    </form>
+    <div class="quick" id="quick"></div>
+  </section>
+
+  <aside class="panel side-panel">
+    <nav class="tabs" id="tabs">
+      <button data-tab="state" class="active">状态</button>
+      <button data-tab="plan">计划</button>
+      <button data-tab="trace">轨迹</button>
+      <button data-tab="tools">工具</button>
+      <button data-tab="cards">角色卡</button>
+      <button data-tab="eval">评测</button>
+    </nav>
+    <div class="tab-body">
+      <div class="tab-pane active" id="pane-state"></div>
+      <div class="tab-pane" id="pane-plan"></div>
+      <div class="tab-pane" id="pane-trace"></div>
+      <div class="tab-pane" id="pane-tools"></div>
+      <div class="tab-pane" id="pane-cards"></div>
+      <div class="tab-pane" id="pane-eval"></div>
+    </div>
+  </aside>
+</main>
+
+<template id="tpl-bubble">
+  <div class="msg">
+    <div class="bubble"></div>
+    <div class="meta"></div>
+    <div class="detail"></div>
+  </div>
+</template>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

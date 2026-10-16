@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "drama-card": "../../components/drama-card/index"
+  },
+  "navigationBarTitleText": "发现",
+  "backgroundTextStyle": "dark"
+}

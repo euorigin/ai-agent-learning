@@ -1,0 +1,107 @@
+# 世界种子配置：地点、任务定义、商品与经济、初始玩家与 NPC 状态。
+# 由 ContentService 加载；运行期状态由 WorldStateService 持有并保证是唯一权威（文档 §10）。
+
+instances:
+  world_01:
+    name: 灰港
+    time: "第 1 日 · 黄昏"
+    weather: 阴天，远处有雨
+    regions:
+      旧市集: {mood: 冷清, note: 摊位只开了三成}
+      苦根药铺: {mood: 安静, note: 柜台后一直亮着灯}
+      北门: {mood: 戒备, note: 卫兵两班轮值}
+      锈锚酒馆: {mood: 喧闹, note: 商队伙计借酒消愁}
+      码头: {mood: 萧条, note: 泊位空了半数}
+    gates:
+      north_gate:
+        name: 北门
+        open: false
+        note: 宵禁在即，北门已提前落闸；开启需卫队长手令
+        requires_permission: interact.open_gate
+
+items:
+  yin_leaf: {name: 银叶草, base_price: 30, tag: 药材}
+  heal_salve: {name: 止血膏, base_price: 18, tag: 药材}
+  fever_draught: {name: 退烧药, base_price: 42, tag: 药材}
+  ration: {name: 干粮, base_price: 6, tag: 杂货}
+  lantern_oil: {name: 灯油, base_price: 9, tag: 杂货}
+  smuggled_spice: {name: 走私香料, base_price: 55, tag: 违禁}
+
+quests:
+  q_102:
+    id: q_102
+    title: 失踪的学徒
+    giver: npc_herbalist_ailin
+    summary: 药剂师艾琳想请你帮她找回失踪的学徒小陶。
+    stages:
+      - 接受艾琳的委托
+      - 到旧市集或北门打听小陶的下落
+      - 找到小陶留下的线索
+      - 回苦根药铺向艾琳回报
+    conditions: {need_item: null}
+    rewards: {gold: 60, trust: 10, affinity: 15}
+    location: 旧市集
+    min_trust: 20
+    min_level: 1
+
+  q_205:
+    id: q_205
+    title: 北门的走私线索
+    giver: npc_guard_calvin
+    summary: 卫队长卡尔文需要有人替他盯住北门的走私路线。
+    stages:
+      - 向卡尔文证明你的身份
+      - 在旧市集与码头各搜集一条线索
+      - 指认通风报信的内应
+    conditions: {need_item: null}
+    rewards: {gold: 80, trust: 12}
+    location: 北门
+    min_trust: 30
+    min_level: 1
+
+  q_310:
+    id: q_310
+    title: 雾谷采药
+    giver: npc_peddler_john
+    summary: 老约翰想雇人去雾谷采回三份银叶草，好赶在涨价前出货。
+    stages:
+      - 接下老约翰的订单
+      - 在雾谷采回银叶草 ×3
+      - 回旧市集交货
+    conditions: {need_item: yin_leaf, quantity: 3}
+    rewards: {gold: 45, affinity: 8}
+    location: 旧市集
+    min_trust: 0
+    min_level: 1
+
+players:
+  p_001:
+    player_id: p_001
+    name: 旅人
+    level: 3
+    location: 旧市集
+    gold: 120
+    hp: 100
+    inventory: {ration: 2, lantern_oil: 1}
+
+npcs:
+  npc_herbalist_ailin:
+    location: 苦根药铺
+    action_state: brewing
+    emotion: {label: 忧虑, intensity: 0.35}
+    resources: {fever_draught: 4, heal_salve: 7}
+  npc_guard_calvin:
+    location: 北门
+    action_state: patrolling
+    emotion: {label: 戒备, intensity: 0.5}
+    resources: {lantern_oil: 3}
+  npc_peddler_john:
+    location: 旧市集
+    action_state: hawking
+    emotion: {label: 热络, intensity: 0.6}
+    resources: {yin_leaf: 5, heal_salve: 2, smuggled_spice: 1}
+
+nearby:
+  npc_herbalist_ailin: [npc_peddler_john, npc_guard_calvin]
+  npc_guard_calvin: [npc_peddler_john]
+  npc_peddler_john: [npc_herbalist_ailin, npc_guard_calvin]

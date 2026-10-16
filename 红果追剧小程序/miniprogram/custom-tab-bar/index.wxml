@@ -1,0 +1,18 @@
+<view class="tabbar">
+  <view
+    wx:for="{{tabs}}"
+    wx:key="pagePath"
+    class="tabbar__item {{selected === index ? 'is-active' : ''}}"
+    data-index="{{index}}"
+    bindtap="onTapTab"
+  >
+    <view class="tabbar__icon-wrap">
+      <text class="tabbar__icon">{{item.icon}}</text>
+      <view wx:if="{{item.text === '消息' && unread > 0}}" class="tabbar__badge">
+        {{unread > 99 ? '99+' : unread}}
+      </view>
+      <view wx:if="{{item.text === '追剧' && pendingUpdate > 0}}" class="tabbar__dot"></view>
+    </view>
+    <view class="tabbar__text">{{item.text}}</view>
+  </view>
+</view>

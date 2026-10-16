@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>WordQuest · 英语单词闯关</title>
+<style>
+:root{
+  --bg:#f4f5fb;
+  --card:#ffffff;
+  --text:#1e2233;
+  --text-2:#6b7280;
+  --text-3:#a3a8b8;
+  --border:#e9ebf3;
+  --primary:#5b5bd6;
+  --primary-2:#7c6cf5;
+  --primary-soft:#eef0ff;
+  --ok:#0ea371;
+  --ok-soft:#e6f8f2;
+  --bad:#e5484d;
+  --bad-soft:#fdecec;
+  --warn:#f59e0b;
+  --shadow:0 10px 30px rgba(30,34,51,.07);
+  --shadow-sm:0 2px 8px rgba(30,34,51,.05);
+  --r:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;justify-content:center;
+  padding:0;
+  overflow-x:hidden;
+}
+#app{
+  width:100%;max-width:520px;min-height:100vh;
+  background:linear-gradient(168deg,#eef1ff 0%,#f7f8fc 42%,#fdf3f7 100%);
+  display:flex;flex-direction:column;
+  position:relative;
+}
+/* 舞台较高时允许页面纵向滚动，避免小屏裁切 */
+.screen.active{min-height:100vh}
+
+.screen{flex:1;display:none;flex-direction:column;padding:22px 20px 26px;animation:screenIn .3s ease}
+.screen.active{display:flex}
+@keyframes screenIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ---------- 通用组件 ---------- */
+.btn{
+  border:none;border-radius:14px;font:inherit;font-weight:600;cursor:pointer;
+  transition:transform .12s,box-shadow .2s,background .2s,opacity .2s;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#fff;padding:15px 22px;font-size:16px;
+  box-shadow:0 8px 20px rgba(91,91,214,.28);
+}
+.btn-ghost{
+  background:var(--card);color:var(--text);border:1px solid var(--border);
+  padding:14px 20px;font-size:15px;box-shadow:var(--shadow-sm);
+}
+.btn-block{width:100%}
+
+/* ---------- 首页 ---------- */
+.brand{text-align:center;padding:18px 0 8px}
+.brand-logo{
+  width:72px;height:72px;margin:0 auto 14px;border-radius:22px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  display:flex;align-items:center;justify-content:center;font-size:36px;
+  box-shadow:0 14px 30px rgba(91,91,214,.32);
+  animation:float 3.4s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.brand h1{font-size:27px;letter-spacing:-.4px}
+.brand h1 span{background:linear-gradient(120deg,var(--primary),var(--primary-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand p{color:var(--text-2);font-size:13.5px;margin-top:7px}
+
+.sec-title{
+  font-size:12px;font-weight:700;color:var(--text-3);
+  letter-spacing:1.4px;margin:22px 2px 10px;
+}
+.chips{display:flex;gap:8px}
+.chip{
+  flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:13px;
+  padding:12px 6px;text-align:center;cursor:pointer;transition:.2s;
+  box-shadow:var(--shadow-sm);
+}
+.chip .t1{font-size:14.5px;font-weight:700}
+.chip .t2{font-size:11px;color:var(--text-3);margin-top:3px}
+.chip.on{
+  border-color:var(--primary);background:var(--primary-soft);
+  box-shadow:0 6px 16px rgba(91,91,214,.16);
+}
+.chip.on .t2{color:var(--primary)}
+
+.modes{display:flex;flex-direction:column;gap:11px}
+.mode{
+  display:flex;align-items:center;gap:14px;background:var(--card);
+  border:1.5px solid var(--border);border-radius:var(--r);padding:15px 16px;
+  cursor:pointer;transition:.2s;box-shadow:var(--shadow-sm);text-align:left;
+}
+.mode:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.mode.on{border-color:var(--primary);background:linear-gradient(120deg,#f3f2ff,#fdf3f9)}
+.mode-ico{
+  width:46px;height:46px;flex:0 0 46px;border-radius:14px;font-size:23px;
+  display:flex;align-items:center;justify-content:center;
+}
+.i-quiz{background:#eef0ff}
+.i-spell{background:#e6f8f2}
+.i-match{background:#fff2e3}
+.mode-txt{flex:1;min-width:0}
+.mode-txt b{display:block;font-size:15.5px}
+.mode-txt small{display:block;color:var(--text-2);font-size:12.5px;margin-top:3px}
+.mode-check{
+  width:22px;height:22px;border-radius:50%;border:2px solid var(--border);
+  flex:0 0 22px;position:relative;transition:.2s;
+}
+.mode.on .mode-check{border-color:var(--primary);background:var(--primary)}
+.mode.on .mode-check::after{
+  content:"";position:absolute;left:6px;top:2.5px;width:5px;height:10px;
+  border:2px solid #fff;border-top:0;border-left:0;transform:rotate(42deg);
+}
+
+.stats{display:flex;gap:10px;margin-top:16px}
+.stat{
+  flex:1;background:var(--card);border-radius:14px;padding:12px 10px;text-align:center;
+  border:1px solid var(--border);box-shadow:var(--shadow-sm);
+}
+.stat b{display:block;font-size:18px;font-variant-numeric:tabular-nums}
+.stat small{color:var(--text-3);font-size:11px}
+
+.foot{margin-top:auto;padding-top:18px}
+.hint{font-size:12.5px;color:var(--text-2);text-align:center;margin-bottom:10px;min-height:17px;line-height:1.45}
+.hint.err{color:var(--bad);text-align:left;background:var(--bad-soft);border-radius:12px;padding:10px 12px;margin-bottom:12px}
+.srcnote{text-align:center;font-size:11px;color:var(--text-3);margin-top:12px}
+.btn:disabled{opacity:.6;cursor:default}
+
+/* ---------- 游戏页 ---------- */
+.hud{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.hud-back{
+  width:38px;height:38px;border-radius:12px;background:var(--card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;
+  box-shadow:var(--shadow-sm);flex:0 0 38px;
+}
+.hud-mid{flex:1;min-width:0}
+.bar{height:8px;border-radius:99px;background:#e6e8f2;overflow:hidden}
+.bar > i{
+  display:block;height:100%;width:0;border-radius:99px;
+  background:linear-gradient(90deg,var(--primary),var(--primary-2));
+  transition:width .35s cubic-bezier(.2,.8,.3,1);
+}
+.hud-meta{display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-2);margin-top:6px;font-weight:600}
+.lives{display:flex;gap:3px;font-size:15px;flex:0 0 auto}
+.lives i{font-style:normal;transition:.25s}
+.lives i.dead{opacity:.22;transform:scale(.82)}
+
+.scoreline{display:flex;align-items:baseline;gap:10px;margin:14px 2px 4px}
+.scoreline b{font-size:30px;font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.scoreline .cl{font-size:12px;color:var(--text-3)}
+.combo{
+  margin-left:auto;font-size:12.5px;font-weight:800;color:var(--warn);
+  background:#fff7e8;border:1px solid #fde7bd;padding:5px 11px;border-radius:99px;
+  opacity:0;transform:scale(.85);transition:.2s;
+}
+.combo.on{opacity:1;transform:none}
+
+.stage{
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+  padding:6px 0 10px;position:relative;
+}
+/* 题目卡 */
+.qcard{
+  background:var(--card);border-radius:24px;padding:26px 20px;text-align:center;
+  box-shadow:var(--shadow);border:1px solid var(--border);position:relative;overflow:hidden;
+}
+.qcard::before{
+  content:"";position:absolute;inset:0 0 auto;height:4px;
+  background:linear-gradient(90deg,var(--primary),var(--primary-2));
+}
+.q-hint{font-size:11.5px;color:var(--text-3);letter-spacing:1.6px;font-weight:700}
+.q-word{
+  font-size:36px;font-weight:800;letter-spacing:-.8px;margin:12px 0 6px;
+  word-break:break-word;line-height:1.15;
+}
+.q-word.cn{font-size:26px;letter-spacing:0}
+.q-ph{font-size:14px;color:var(--text-2);font-family:"Segoe UI",system-ui,sans-serif}
+.q-speak{
+  margin-top:12px;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;
+  color:var(--primary);background:var(--primary-soft);border:none;border-radius:99px;
+  padding:7px 14px;cursor:pointer;transition:.15s;
+}
+.q-speak:active{transform:scale(.95)}
+
+/* 选项 */
+.opts{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+.opt{
+  background:var(--card);border:1.5px solid var(--border);border-radius:15px;
+  padding:15px 16px;font:inherit;font-size:15px;text-align:left;cursor:pointer;
+  display:flex;align-items:center;gap:12px;transition:.16s;box-shadow:var(--shadow-sm);
+  color:var(--text);
+}
+.opt:active{transform:scale(.985)}
+.opt .k{
+  width:25px;height:25px;flex:0 0 25px;border-radius:8px;background:#f1f2f9;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--text-2);
+  transition:.16s;
+}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.ok .k{background:var(--ok);color:#fff}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft);animation:shake .4s}
+.opt.bad .k{background:var(--bad);color:#fff}
+.opt:disabled{cursor:default}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}
+  40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(2px)}
+}
+
+/* 拼写 */
+.slot{
+  display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:18px;
+}
+.slot .cell{
+  width:clamp(28px,8.2vw,36px);height:44px;border-radius:11px;border:2px dashed var(--border);
+  background:#fbfbfe;display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:800;transition:.18s;cursor:pointer;text-transform:lowercase;
+}
+.slot .cell.filled{border-style:solid;border-color:var(--primary);background:var(--primary-soft);color:var(--primary);animation:pop .2s}
+.slot .cell.hint{border-color:#dfe2ee;color:var(--text-2);background:#f3f4fa}
+.slot .cell.ok{border-color:var(--ok);background:var(--ok-soft);color:var(--ok)}
+.slot .cell.bad{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+@keyframes pop{from{transform:scale(.8)}to{transform:scale(1)}}
+.pool{
+  display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:22px;
+}
+.pool button{
+  width:clamp(34px,9.5vw,44px);height:48px;border-radius:12px;border:1.5px solid var(--border);background:var(--card);
+  font:inherit;font-size:19px;font-weight:700;cursor:pointer;transition:.15s;
+  box-shadow:var(--shadow-sm);color:var(--text);text-transform:lowercase;
+}
+.pool button:active{transform:scale(.92)}
+.pool button.used{opacity:.24;pointer-events:none;transform:scale(.9)}
+
+/* 翻牌 */
+.matchgrid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding:4px 0;
+}
+.mc{perspective:800px;cursor:pointer;aspect-ratio:1/1.02}
+.mc-in{
+  position:relative;width:100%;height:100%;
+  transition:transform .45s cubic-bezier(.2,.8,.3,1);
+  transform-style:preserve-3d;
+}
+.mc.flip .mc-in{transform:rotateY(180deg)}
+.mc.done .mc-in{opacity:.3;transform:rotateY(180deg) scale(.94)}
+.mc-face{
+  position:absolute;inset:0;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:6px;text-align:center;
+}
+.mc-front{
+  background:linear-gradient(140deg,var(--primary),var(--primary-2));color:#fff;
+  font-size:23px;font-weight:800;box-shadow:0 6px 16px rgba(91,91,214,.24);
+}
+.mc-back{
+  background:var(--card);border:1.5px solid var(--border);transform:rotateY(180deg);
+  font-size:13px;font-weight:700;line-height:1.3;word-break:break-word;box-shadow:var(--shadow-sm);
+}
+.mc-back small{display:block;font-size:10px;color:var(--text-3);font-weight:600;margin-top:3px}
+.mc.hit .mc-back{border-color:var(--ok);background:var(--ok-soft)}
+.mc.err .mc-back{border-color:var(--bad);background:var(--bad-soft);animation:shake .4s}
+
+.toast{
+  position:absolute;left:50%;top:34%;transform:translate(-50%,-50%);
+  font-size:34px;font-weight:900;pointer-events:none;opacity:0;z-index:20;
+  background:linear-gradient(120deg,var(--warn),#ff7a59);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  white-space:nowrap;
+}
+.toast.go{animation:toastUp .95s ease forwards}
+@keyframes toastUp{
+  0%{opacity:0;transform:translate(-50%,-30%) scale(.6)}
+  30%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}
+  70%{opacity:1;transform:translate(-50%,-60%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-88%) scale(.95)}
+}
+
+/* ---------- 结算 ---------- */
+.rs-hero{text-align:center;padding:14px 0 6px}
+.rs-hero .em{font-size:50px;line-height:1;margin-bottom:10px;display:block}
+.rs-hero h2{font-size:23px}
+.rs-hero p{color:var(--text-2);font-size:13.5px;margin-top:6px}
+.rs-score{
+  margin:20px 0;text-align:center;background:linear-gradient(135deg,#f2f2ff,#fdf3f9);
+  border:1px solid var(--border);border-radius:22px;padding:22px;
+}
+.rs-score small{font-size:11.5px;color:var(--text-3);letter-spacing:1.5px;font-weight:700}
+.rs-score b{
+  display:block;font-size:52px;letter-spacing:-2px;margin:4px 0 0;
+  background:linear-gradient(120deg,var(--primary),var(--primary-2));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.rs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.rs-cell{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;
+  text-align:center;box-shadow:var(--shadow-sm);
+}
+.rs-cell b{display:block;font-size:19px;font-variant-numeric:tabular-nums}
+.rs-cell small{color:var(--text-3);font-size:11px}
+.wrongbox{
+  margin-top:16px;background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:14px;box-shadow:var(--shadow-sm);max-height:210px;overflow:auto;
+}
+.wrongbox h4{font-size:12.5px;color:var(--text-2);margin-bottom:9px;letter-spacing:.5px}
+.wrow{display:flex;align-items:baseline;gap:9px;padding:7px 0;border-bottom:1px dashed var(--border);font-size:13.5px}
+.wrow:last-child{border-bottom:0}
+.wrow b{font-weight:700;color:var(--text)}
+.wrow span{color:var(--text-2);font-size:12.5px}
+.actions{display:flex;gap:10px;margin-top:auto;padding-top:18px}
+.actions .btn{flex:1}
+
+/* 弹层 */
+.sheet-mask{
+  position:fixed;inset:0;background:rgba(24,26,38,.42);backdrop-filter:blur(3px);
+  display:none;align-items:flex-end;justify-content:center;z-index:50;
+}
+.sheet-mask.on{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.sheet{
+  width:100%;max-width:520px;background:var(--card);border-radius:24px 24px 0 0;
+  padding:20px 20px 28px;max-height:74vh;overflow:auto;animation:sheetUp .28s cubic-bezier(.2,.8,.3,1);
+}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+.sheet-head{display:flex;align-items:center;margin-bottom:14px}
+.sheet-head b{font-size:16px;flex:1}
+.sheet-head button{
+  border:none;background:#f1f2f9;border-radius:10px;width:32px;height:32px;font-size:16px;
+  cursor:pointer;color:var(--text-2);
+}
+.empty{text-align:center;color:var(--text-3);font-size:13.5px;padding:30px 0}
+
+@media (max-width:380px){
+  .q-word{font-size:30px}
+  .matchgrid{gap:7px}
+  .mc-back{font-size:11.5px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ============ 首页 ============ -->
+  <section class="screen active" id="s-home">
+    <div class="brand">
+      <div class="brand-logo">🎯</div>
+      <h1>Word<span>Quest</span></h1>
+      <p>英语单词闯关 · 三种玩法 · 三级词库</p>
+    </div>
+
+    <div class="sec-title">选择词库难度</div>
+    <div class="chips" id="diffChips"></div>
+
+    <div class="sec-title">选择玩法</div>
+    <div class="modes" id="modeList"></div>
+
+    <div class="stats">
+      <div class="stat"><b id="st-best">0</b><small>历史最高分</small></div>
+      <div class="stat"><b id="st-right">0</b><small>累计答对</small></div>
+      <div class="stat" id="btn-wrongbook" style="cursor:pointer"><b id="st-wrong">0</b><small>错词本 ›</small></div>
+    </div>
+
+    <div class="foot">
+      <div class="hint" id="home-hint"></div>
+      <button class="btn btn-primary btn-block" id="btn-start">开始闯关</button>
+      <div class="srcnote">词库取自公开考纲词表 · 发音由浏览器语音合成实时朗读</div>
+    </div>
+  </section>
+
+  <!-- ============ 游戏页 ============ -->
+  <section class="screen" id="s-game">
+    <div class="hud">
+      <div class="hud-back" id="btn-quit">‹</div>
+      <div class="hud-mid">
+        <div class="bar"><i id="hud-bar"></i></div>
+        <div class="hud-meta"><span id="hud-progress">第 1 / 10 题</span><span id="hud-mode"></span></div>
+      </div>
+      <div class="lives" id="hud-lives"></div>
+    </div>
+
+    <div class="scoreline">
+      <b id="hud-score">0</b><span class="cl">分</span>
+      <span class="combo" id="hud-combo">连击 ×1</span>
+    </div>
+
+    <div class="stage" id="stage"></div>
+    <div class="toast" id="toast"></div>
+  </section>
+
+  <!-- ============ 结算页 ============ -->
+  <section class="screen" id="s-result">
+    <div class="rs-hero">
+      <span class="em" id="rs-emoji">🏆</span>
+      <h2 id="rs-title">闯关完成</h2>
+      <p id="rs-sub"></p>
+    </div>
+    <div class="rs-score">
+      <small>本局得分</small>
+      <b id="rs-score">0</b>
+    </div>
+    <div class="rs-grid" id="rs-grid"></div>
+    <div class="wrongbox" id="rs-wrongbox"></div>
+    <div class="actions">
+      <button class="btn btn-ghost" id="btn-home">返回首页</button>
+      <button class="btn btn-primary" id="btn-again">再来一局</button>
+    </div>
+  </section>
+
+  <!-- 错词本 -->
+  <div class="sheet-mask" id="mask">
+    <div class="sheet">
+      <div class="sheet-head"><b>📕 错词本</b><button id="sheet-close">✕</button></div>
+      <div id="sheet-body"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+
+/* =====================================================================
+ * 1. 词库加载层 —— 词库外置为 data/{lv}.js，选哪个难度才加载哪个
+ * ===================================================================*/
+const WORDLIB = {
+  meta: null,      // { cet4: 4536, ... } —— 由 data/meta.js 提供，只用于首页显示词量
+  lists: {},       // 已加载的难度 -> [{w, cn}, ...]
+  loading: {}      // 进行中的加载 Promise，避免重复插入 script 标签
+};
+
+/** 动态插入 <script>：不受 CORS 限制，因此 file:// 双击打开同样可用 */
+function loadScript(src){
+  return new Promise((resolve, reject) => {
+    const el = document.createElement("script");
+    el.src = src;
+    el.onload = () => resolve();
+    el.onerror = () => reject(new Error("无法加载 " + src));
+    document.head.appendChild(el);
+  });
+}
+
+/** 读各难度词数（很小），失败不阻塞游戏 —— 只是首页词量显示为空 */
+function loadMeta(){
+  if(WORDLIB.meta) return Promise.resolve(WORDLIB.meta);
+  return loadScript("data/meta.js")
+    .then(() => { WORDLIB.meta = window.__WQ_META__ || null; return WORDLIB.meta; })
+    .catch(() => null);
+}
+
+/** 按需加载某个难度的完整词库 */
+function loadWords(lv){
+  if(WORDLIB.lists[lv]) return Promise.resolve(WORDLIB.lists[lv]);
+  if(WORDLIB.loading[lv]) return WORDLIB.loading[lv];
+
+  WORDLIB.loading[lv] = loadScript("data/" + lv + ".js").then(() => {
+    const raw = window.__WQ_WORDS__ && window.__WQ_WORDS__[lv];
+    if(!raw || !raw.length) throw new Error("词库数据为空：" + lv);
+    // 紧凑数组对 ["word", "释义"] 转成游戏内部使用的对象形式
+    const list = raw.map(p => ({ w: p[0], cn: p[1] }));
+    WORDLIB.lists[lv] = list;
+    delete WORDLIB.loading[lv];
+    return list;
+  }).catch(err => {
+    delete WORDLIB.loading[lv];
+    throw err;
+  });
+
+  return WORDLIB.loading[lv];
+}
+
+function wordCount(lv){
+  if(WORDLIB.meta && WORDLIB.meta[lv]) return WORDLIB.meta[lv];
+  return WORDLIB.lists[lv] ? WORDLIB.lists[lv].length : 0;
+}
+
+function diffSub(d){
+  const n = wordCount(d.id);
+  return n ? d.sub + " " + n.toLocaleString("en-US") + " 词" : d.sub;
+}
+
+const DIFFS = [
+  {id:"cet4",   name:"CET-4",  sub:"基础"},
+  {id:"cet6",   name:"CET-6",  sub:"进阶"},
+  {id:"kaoyan", name:"考研",   sub:"挑战"}
+];
+
+const MODES = [
+  {id:"quiz",  name:"四选一闯关", desc:"看单词选释义，考验辨识速度", ico:"🎯", cls:"i-quiz"},
+  {id:"spell", name:"字母拼写",   desc:"看中文拼英文，字母池点击拼词", ico:"🔤", cls:"i-spell"},
+  {id:"match", name:"记忆翻牌",   desc:"英文与释义配对，考验短时记忆", ico:"🃏", cls:"i-match"}
+];
+
+const PER_ROUND = 10;   // 每关题目数
+const START_LIVES = 3;  // 初始生命
+const QUEUE_SIZE = 120; // 每批抽题数（够玩 12 局），避免每局重洗 4000+ 词池
+
+/* =====================================================================
+ * 2. 工具函数
+ * ===================================================================*/
+const $ = (id) => document.getElementById(id);
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+/** 从数组中不重复地随机抽取 n 个。
+ *  词池有 4000+ 词时，整体洗牌再取前 n 个纯属浪费，改为按索引采样。 */
+function sample(arr, n){
+  const len = arr.length;
+  n = Math.min(n, len);
+  const out = [];
+  const usedIdx = new Set();
+  while(out.length < n){
+    const i = Math.floor(Math.random() * len);
+    if(usedIdx.has(i)) continue;
+    usedIdx.add(i);
+    out.push(arr[i]);
+  }
+  return out;
+}
+
+function pickOne(arr){
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+/**
+ * 取 n 个干扰词。
+ * 真实考纲词库里近义词大量重复（ability / capacity 都可能译作「能力」），
+ * 所以先按「释义不同」筛，候选不够再放宽成「只要不是同一个单词」。
+ */
+function pickDistractors(pool, answer, n){
+  const out = [];
+  const usedW = new Set([answer.w]);
+  const usedCn = new Set([answer.cn]);
+  let guard = 0;
+
+  while(out.length < n && guard++ < 800){
+    const c = pool[Math.floor(Math.random() * pool.length)];
+    if(!c || usedW.has(c.w) || usedCn.has(c.cn)) continue;
+    usedW.add(c.w); usedCn.add(c.cn);
+    out.push(c);
+  }
+  guard = 0;
+  while(out.length < n && guard++ < 800){
+    const c = pool[Math.floor(Math.random() * pool.length)];
+    if(!c || usedW.has(c.w)) continue;
+    usedW.add(c.w);
+    out.push(c);
+  }
+  return out;
+}
+
+/** 极简 HTML 转义，防御任何非内置文本注入 */
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => (
+    {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]
+  ));
+}
+
+function fmtTime(ms){
+  const s = Math.floor(ms / 1000);
+  return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+}
+
+/* =====================================================================
+ * 3. 音效（Web Audio 合成，零外部资源）+ 发音（浏览器 TTS）
+ * ===================================================================*/
+const AudioFX = (() => {
+  let ctx = null;
+  let enabled = true;
+  function ensure(){
+    if(ctx) return ctx;
+    try{
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) { enabled = false; return null; }
+      ctx = new AC();
+    }catch(e){ enabled = false; }
+    return ctx;
+  }
+  function tone(freq, dur, type, vol, delay){
+    if(!enabled) return;
+    const c = ensure();
+    if(!c) return;
+    const t0 = c.currentTime + (delay || 0);
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.type = type || "sine";
+    osc.frequency.setValueAtTime(freq, t0);
+    gain.gain.setValueAtTime(0, t0);
+    gain.gain.linearRampToValueAtTime(vol == null ? .07 : vol, t0 + .012);
+    gain.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+    osc.connect(gain); gain.connect(c.destination);
+    osc.start(t0); osc.stop(t0 + dur + .02);
+  }
+  return {
+    unlock(){ const c = ensure(); if(c && c.state === "suspended") c.resume(); },
+    correct(){ tone(660, .09, "sine", .07, 0); tone(990, .13, "sine", .06, .075); },
+    wrong(){ tone(196, .22, "sawtooth", .05, 0); tone(146, .26, "sawtooth", .04, .06); },
+    combo(n){ const base = 780 + Math.min(n, 6) * 60; tone(base, .1, "triangle", .06, 0); tone(base * 1.5, .14, "triangle", .05, .07); },
+    flip(){ tone(520, .06, "triangle", .04, 0); },
+    finish(){ [523, 659, 784, 1046].forEach((f, i) => tone(f, .22, "sine", .06, i * .11)); }
+  };
+})();
+
+function speak(word){
+  try{
+    if(!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(word);
+    u.lang = "en-US";
+    u.rate = .9;
+    window.speechSynthesis.speak(u);
+  }catch(e){ /* 静默降级 */ }
+}
+
+/* =====================================================================
+ * 4. 持久化（localStorage，失败静默降级）
+ * ===================================================================*/
+const KEY = "wordquest.v1";
+const Store = (() => {
+  const def = { best: {}, right: 0, wrongBook: [] };
+  let data = JSON.parse(JSON.stringify(def));
+
+  function load(){
+    try{
+      const raw = localStorage.getItem(KEY);
+      if(raw){
+        const p = JSON.parse(raw);
+        data = Object.assign(JSON.parse(JSON.stringify(def)), p || {});
+        if(!data.best || typeof data.best !== "object") data.best = {};
+        if(!Array.isArray(data.wrongBook)) data.wrongBook = [];
+      }
+    }catch(e){ /* 隐私模式等场景下静默降级为内存态 */ }
+  }
+  function save(){
+    try{ localStorage.setItem(KEY, JSON.stringify(data)); }catch(e){}
+  }
+  load();
+
+  return {
+    get best(){ return data.best; },
+    get right(){ return data.right; },
+    get wrongBook(){ return data.wrongBook; },
+    bestOf(key){ return data.best[key] || 0; },
+    addRight(n){ data.right += n; save(); },
+    submitBest(key, score){
+      const isNew = score > (data.best[key] || 0);
+      if(isNew){ data.best[key] = score; save(); }
+      return isNew;
+    },
+    addWrong(word){
+      const idx = data.wrongBook.findIndex(x => x.w === word.w);
+      if(idx >= 0){
+        data.wrongBook[idx].count += 1;
+        data.wrongBook[idx].ts = Date.now();
+      }else{
+        data.wrongBook.push({ w:word.w, ph:word.ph, cn:word.cn, count:1, ts:Date.now() });
+      }
+      if(data.wrongBook.length > 200) data.wrongBook.shift();
+      save();
+    },
+    clearWrong(){ data.wrongBook = []; save(); }
+  };
+})();
+
+/* =====================================================================
+ * 5. 游戏状态
+ * ===================================================================*/
+const G = {
+  diff: "cet4",
+  mode: "quiz",
+  // 运行时
+  queue: [],       // 本轮题序（从词池抽样，避免每次重洗整个词池）
+  pool: [],        // 当前难度全量词池
+  qIdx: 0,         // queue 游标
+  idx: 0,
+  starting: false, // 是否正在加载词库
+  lives: START_LIVES,
+  score: 0,
+  combo: 0,
+  maxCombo: 0,
+  right: 0,
+  total: 0,
+  wrong: [],       // 本局错词
+  startAt: 0,
+  locked: false,
+  // quiz
+  cur: null,
+  // spell
+  spell: null,
+  // match
+  match: null
+};
+
+/* =====================================================================
+ * 6. 通用 UI
+ * ===================================================================*/
+const SCREENS = ["s-home", "s-game", "s-result"];
+function go(name){
+  SCREENS.forEach(id => $(id).classList.toggle("active", id === name));
+  window.scrollTo(0, 0);
+}
+
+/** 首页底部提示（加载中 / 加载失败） */
+function setHint(msg, isErr){
+  const el = $("home-hint");
+  if(!el) return;
+  el.textContent = msg || "";
+  el.classList.toggle("err", !!isErr);
+}
+
+let toastTimer = null;
+function toast(text){
+  const el = $("toast");
+  el.textContent = text;
+  el.classList.remove("go");
+  void el.offsetWidth;      // 强制重排以重启动画
+  el.classList.add("go");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("go"), 1000);
+}
+
+function renderHud(){
+  const matched = G.match ? MATCH_PAIRS - G.match.remain : 0;
+  const done = G.mode === "match" ? matched : Math.min(G.idx, PER_ROUND);
+
+  $("hud-progress").textContent = G.mode === "match"
+    ? "剩余 " + (MATCH_PAIRS - matched) + " 对"
+    : "第 " + Math.max(1, done) + " / " + PER_ROUND + " 题";
+  $("hud-mode").textContent = MODES.find(m => m.id === G.mode).name;
+  $("hud-bar").style.width = Math.round((done / PER_ROUND) * 100) + "%";
+  $("hud-score").textContent = G.score;
+  const c = $("hud-combo");
+  if(G.combo >= 2){
+    c.textContent = "连击 ×" + G.combo;
+    c.classList.add("on");
+  }else{
+    c.classList.remove("on");
+  }
+  // 生命
+  const live = $("hud-lives");
+  if(G.mode === "match"){ live.innerHTML = ""; return; }
+  let html = "";
+  for(let i = 0; i < START_LIVES; i++){
+    html += '<i class="' + (i < G.lives ? "" : "dead") + '">❤️</i>';
+  }
+  live.innerHTML = html;
+}
+
+/* =====================================================================
+ * 7. 首页
+ * ===================================================================*/
+function renderHome(){
+  // 难度胶囊
+  $("diffChips").innerHTML = DIFFS.map(d =>
+    '<div class="chip ' + (d.id === G.diff ? "on" : "") + '" data-diff="' + d.id + '">' +
+      '<div class="t1">' + esc(d.name) + "</div>" +
+      '<div class="t2">' + esc(diffSub(d)) + "</div>" +
+    "</div>"
+  ).join("");
+
+  // 玩法卡片
+  $("modeList").innerHTML = MODES.map(m =>
+    '<div class="mode ' + (m.id === G.mode ? "on" : "") + '" data-mode="' + m.id + '">' +
+      '<div class="mode-ico ' + m.cls + '">' + m.ico + "</div>" +
+      '<div class="mode-txt"><b>' + esc(m.name) + "</b><small>" + esc(m.desc) + "</small></div>" +
+      '<div class="mode-check"></div>' +
+    "</div>"
+  ).join("");
+
+  // 统计
+  const key = G.diff + ":" + G.mode;
+  $("st-best").textContent = Store.bestOf(key);
+  $("st-right").textContent = Store.right;
+  $("st-wrong").textContent = Store.wrongBook.length;
+}
+
+/* =====================================================================
+ * 8. 开局
+ * ===================================================================*/
+async function startGame(){
+  if(G.starting) return;
+  G.starting = true;
+  $("btn-start").disabled = true;
+  setHint("正在加载词库…");
+
+  let pool;
+  try{
+    pool = await loadWords(G.diff);
+  }catch(err){
+    setHint("词库加载失败：" + err.message + "。本地打开时请确认 data/ 目录与 index.html 同级。", true);
+    G.starting = false;
+    $("btn-start").disabled = false;
+    return;
+  }
+  setHint("");
+  $("btn-start").disabled = false;
+  G.starting = false;
+
+  G.pool = pool;
+  G.queue = [];
+  G.qIdx = 0;
+  G.idx = 0;
+  G.lives = START_LIVES;
+  G.score = 0;
+  G.combo = 0;
+  G.maxCombo = 0;
+  G.right = 0;
+  G.total = 0;
+  G.wrong = [];
+  G.startAt = Date.now();
+  G.locked = false;
+  G.cur = null;
+  G.spell = null;
+  G.match = null;
+
+  AudioFX.unlock();
+  go("s-game");
+
+  // 每个分支内部自行 renderHud，避免 match 模式下 G.match 尚未初始化
+  if(G.mode === "quiz") nextQuiz();
+  else if(G.mode === "spell") nextSpell();
+  else initMatch();
+}
+
+/** 重抽一批题目 */
+function refillQueue(){
+  G.queue = sample(G.pool, Math.min(QUEUE_SIZE, G.pool.length));
+  G.qIdx = 0;
+}
+
+/** 取下一题词；同一批内保证不重复 */
+function nextWord(){
+  if(!G.queue.length || G.qIdx >= G.queue.length) refillQueue();
+  const w = G.queue[G.qIdx];
+  G.qIdx += 1;
+  G.idx += 1;
+  return w;
+}
+
+/* =====================================================================
+ * 9. 玩法一：四选一闯关
+ * ===================================================================*/
+function nextQuiz(){
+  if(G.idx >= PER_ROUND) return finish();
+  const word = nextWord();
+  G.cur = word;
+  G.total += 1;
+  G.locked = false;
+
+  // 出题方向随机：英→中 或 中→英
+  const en2cn = Math.random() < .75;
+  const distract = pickDistractors(G.pool, word, 3);
+  const opts = shuffle([word, ...distract]);
+
+  const qt = en2cn ? "选出正确的中文释义" : "选出正确的英文单词";
+  const head = en2cn
+    ? '<div class="q-hint">ENGLISH</div><div class="q-word">' + esc(word.w) + "</div>" +
+      '<div class="q-ph">' + esc(word.ph) + "</div>" +
+      '<button class="q-speak" data-speak="' + esc(word.w) + '">🔊 朗读单词</button>'
+    : '<div class="q-hint">CHINESE</div><div class="q-word cn">' + esc(word.cn) + "</div>" +
+      '<div class="q-ph" style="margin-top:8px">' + qt + "</div>";
+
+  $("stage").innerHTML =
+    '<div class="qcard">' + head + "</div>" +
+    '<div class="opts" id="opts">' + opts.map((o, i) => {
+      const label = en2cn ? o.cn : o.w;
+      const key = String.fromCharCode(65 + i);
+      return '<button class="opt" data-w="' + esc(o.w) + '">' +
+               '<span class="k">' + key + "</span><span>" + esc(label) + "</span>" +
+             "</button>";
+    }).join("") + "</div>";
+
+  renderHud();
+}
+
+function answerQuiz(btn){
+  if(G.locked) return;
+  G.locked = true;
+
+  const chosen = btn.dataset.w;
+  const ok = chosen === G.cur.w;
+  const opts = $("opts").querySelectorAll(".opt");
+  const correctW = G.cur.w;
+
+  opts.forEach(b => {
+    b.disabled = true;
+    if(b.dataset.w === correctW) b.classList.add("ok");
+    else if(b === btn) b.classList.add("bad");
+  });
+
+  if(ok){
+    const gain = 10 + Math.min(G.combo, 5) * 2;
+    G.score += gain;
+    G.right += 1;
+    G.combo += 1;
+    G.maxCombo = Math.max(G.maxCombo, G.combo);
+    AudioFX.correct();
+    if(G.combo >= 3){ toast("连击 ×" + G.combo + "!"); AudioFX.combo(G.combo); }
+  }else{
+    G.combo = 0;
+    G.lives -= 1;
+    G.wrong.push(G.cur);
+    Store.addWrong(G.cur);
+    AudioFX.wrong();
+  }
+
+  renderHud();
+  setTimeout(() => {
+    if(G.lives <= 0) return finish(true);
+    if(ok || G.mode !== "quiz") nextQuiz();
+    else nextQuiz();
+  }, ok ? 620 : 1100);
+}
+
+/* =====================================================================
+ * 10. 玩法二：字母拼写
+ * ===================================================================*/
+function nextSpell(){
+  if(G.idx >= PER_ROUND) return finish();
+  const word = nextWord();
+  G.cur = word;
+  G.total += 1;
+  G.locked = false;
+
+  const letters = word.w.toLowerCase().split("");
+  const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+  // 干扰字母：补足到至少 4 个额外的，且不与原词重复过多
+  const extra = [];
+  const guard = new Set(letters);
+  const candidates = shuffle(alphabet.filter(c => !guard.has(c)));
+  // 干扰字母：长单词只加 2 个，避免字母池溢出，也让玩家专注拼写本身
+  const need = letters.length >= 10 ? 2 : Math.max(3, Math.min(6, Math.ceil(letters.length * .5)));
+  for(let i = 0; i < need && i < candidates.length; i++) extra.push(candidates[i]);
+
+  G.spell = {
+    answer: letters,
+    pool: shuffle(letters.concat(extra)).map((ch, i) => ({ id:i, ch, used:false })),
+    slots: new Array(letters.length).fill(null)  // 存放 pool 下标
+  };
+
+  // 首字母提示：默认给第 1 个字母位置做提示（不可点击），降低挫败
+  const hintIndex = 0;
+  G.spell.slots[hintIndex] = -1;  // -1 表示提示位
+
+  renderSpell();
+  renderHud();
+}
+
+function renderSpell(){
+  const sp = G.spell;
+  const word = G.cur;
+
+  const slots = sp.slots.map((pi, i) => {
+    if(pi === -1){
+      return '<div class="cell hint" data-slot="' + i + '">' + esc(sp.answer[i]) + "</div>";
+    }
+    if(pi === null){
+      return '<div class="cell" data-slot="' + i + '">·</div>';
+    }
+    return '<div class="cell filled" data-slot="' + i + '">' + esc(sp.pool[pi].ch) + "</div>";
+  }).join("");
+
+  const pool = sp.pool.map(p =>
+    '<button class="' + (p.used ? "used" : "") + '" data-pool="' + p.id + '">' + esc(p.ch) + "</button>"
+  ).join("");
+
+  $("stage").innerHTML =
+    '<div class="qcard">' +
+      '<div class="q-hint">拼出对应的英文单词</div>' +
+      '<div class="q-word cn">' + esc(word.cn) + "</div>" +
+      '<div class="q-ph">' + esc(word.ph) + " · 共 " + sp.answer.length + " 个字母</div>" +
+      '<div class="slot" id="slot">' + slots + "</div>" +
+    "</div>" +
+    '<div class="pool" id="pool">' + pool + "</div>";
+}
+
+function clickPool(id){
+  if(G.locked) return;
+  const sp = G.spell;
+  const item = sp.pool.find(p => p.id === id);
+  if(!item || item.used) return;
+
+  const slotIdx = sp.slots.findIndex(s => s === null);
+  if(slotIdx === -1) return;
+
+  item.used = true;
+  sp.slots[slotIdx] = item.id;
+  AudioFX.flip();
+  renderSpell();
+
+  if(sp.slots.every(s => s !== null)) judgeSpell();
+}
+
+function clickSlot(idx){
+  if(G.locked) return;
+  const sp = G.spell;
+  const pi = sp.slots[idx];
+  if(pi === null || pi === -1) return;
+
+  sp.pool.find(p => p.id === pi).used = false;
+  sp.slots[idx] = null;
+  // 撤回后右移，保持"从左往右填"的直觉
+  renderSpell();
+}
+
+function judgeSpell(){
+  const sp = G.spell;
+  const built = sp.slots.map((pi, i) => pi === -1 ? sp.answer[i] : sp.pool[pi].ch).join("");
+  const target = G.cur.w.toLowerCase();
+  const ok = built === target;
+  G.locked = true;
+
+  const cells = $("slot").querySelectorAll(".cell");
+  cells.forEach(c => c.classList.add(ok ? "ok" : "bad"));
+
+  if(ok){
+    const gain = 20 + Math.min(G.combo, 5) * 3;
+    G.score += gain;
+    G.right += 1;
+    G.combo += 1;
+    G.maxCombo = Math.max(G.maxCombo, G.combo);
+    AudioFX.correct();
+    speak(G.cur.w);
+    if(G.combo >= 3){ toast("连击 ×" + G.combo + "!"); AudioFX.combo(G.combo); }
+    renderHud();
+    setTimeout(nextSpell, 700);
+  }else{
+    G.combo = 0;
+    G.lives -= 1;
+    G.wrong.push(G.cur);
+    Store.addWrong(G.cur);
+    AudioFX.wrong();
+    renderHud();
+    // 展示正确答案后再进入下一题
+    setTimeout(() => {
+      $("stage").innerHTML =
+        '<div class="qcard" style="border-color:var(--bad)">' +
+          '<div class="q-hint">正确答案</div>' +
+          '<div class="q-word">' + esc(G.cur.w) + "</div>" +
+          '<div class="q-ph">' + esc(G.cur.ph) + "</div>" +
+          '<div style="margin-top:12px;font-size:13.5px;color:var(--text-2)">' + esc(G.cur.cn) + "</div>" +
+        "</div>";
+    }, 620);
+    setTimeout(() => {
+      if(G.lives <= 0) return finish(true);
+      nextSpell();
+    }, 1750);
+  }
+}
+
+/* =====================================================================
+ * 11. 玩法三：记忆翻牌配对
+ * ===================================================================*/
+const MATCH_PAIRS = 6;   // 6 对 = 12 张
+
+function initMatch(){
+  const picked = sample(G.pool, MATCH_PAIRS);
+  const cards = [];
+  picked.forEach((word, i) => {
+    cards.push({ pid:i, kind:"en", text:word.w, ph:word.ph, word });
+    cards.push({ pid:i, kind:"cn", text:word.cn, ph:"", word });
+  });
+  G.match = {
+    cards: shuffle(cards).map((c, i) => Object.assign({}, c, { idx:i })),
+    first: null,
+    lock: false,
+    moves: 0,
+    remain: MATCH_PAIRS
+  };
+  G.total = MATCH_PAIRS;
+  G.right = 0;
+  renderMatch();
+  renderHud();
+}
+
+function renderMatch(){
+  const grid = G.match.cards.map(c => {
+    const flipped = c.flipped || c.done;
+    const cls = "mc" + (flipped ? " flip" : "") + (c.done ? " done" : "") +
+                (c.judge === "hit" ? " hit" : c.judge === "err" ? " err" : "");
+    const back = c.kind === "en"
+      ? "<b>" + esc(c.text) + "</b><small>" + esc(c.ph) + "</small>"
+      : esc(c.text);
+    return '<div class="' + cls + '" data-card="' + c.idx + '">' +
+             '<div class="mc-in">' +
+               '<div class="mc-face mc-front">?</div>' +
+               '<div class="mc-face mc-back">' + back + "</div>" +
+             "</div>" +
+           "</div>";
+  }).join("");
+
+  $("stage").innerHTML =
+    '<div class="matchgrid" id="mgrid">' + grid + "</div>" +
+    '<div style="text-align:center;margin-top:14px;font-size:12.5px;color:var(--text-3)">' +
+      "翻开卡片，把英文和它的释义配成一对 · 步数 <b>" + G.match.moves + "</b>" +
+    "</div>";
+}
+
+function clickCard(idx){
+  const m = G.match;
+  if(m.lock) return;
+  const card = m.cards.find(c => c.idx === idx);
+  if(!card || card.done || card.flipped) return;
+
+  card.flipped = true;
+  AudioFX.flip();
+  if(card.kind === "en") speak(card.text);
+  renderMatch();
+
+  if(m.first === null){
+    m.first = card;
+    return;
+  }
+
+  // 第二张
+  m.moves += 1;
+  const a = m.first, b = card;
+  m.first = null;
+
+  if(a.pid === b.pid && a.kind !== b.kind){
+    // 配对成功
+    a.done = b.done = true;
+    a.judge = b.judge = "hit";
+    m.remain -= 1;
+    G.right += 1;
+    G.score += 25;
+    G.combo += 1;
+    G.maxCombo = Math.max(G.maxCombo, G.combo);
+    AudioFX.correct();
+    if(G.combo >= 3){ toast("连击 ×" + G.combo + "!"); }
+    renderMatch(); renderHud();
+    if(m.remain === 0) setTimeout(finish, 650);
+  }else{
+    m.lock = true;
+    a.judge = b.judge = "err";
+    G.combo = 0;
+    AudioFX.wrong();
+    renderMatch();
+    setTimeout(() => {
+      a.flipped = b.flipped = false;
+      a.judge = b.judge = null;
+      m.lock = false;
+      renderMatch();
+    }, 700);
+    // 翻牌不扣命，但记错词（英文卡对应词）
+    const w = a.kind === "en" ? a.word : b.word;
+    if(w){
+      G.wrong.push(w);
+      Store.addWrong(w);
+    }
+  }
+  renderHud();
+}
+
+/* =====================================================================
+ * 12. 结算
+ * ===================================================================*/
+function finishIfDone(){
+  return false;
+}
+
+function finish(dead){
+  const ms = Date.now() - G.startAt;
+  const totalAnswered = G.mode === "match" ? MATCH_PAIRS : G.total;
+  const acc = totalAnswered ? Math.round((G.right / totalAnswered) * 100) : 0;
+
+  // 翻牌模式按剩余时间补分
+  let bonus = 0;
+  if(G.mode === "match" && G.match){
+    const fast = Math.max(0, 90 - Math.floor(ms / 1000));
+    bonus = fast * 2;
+    G.score += bonus;
+  }
+
+  const key = G.diff + ":" + G.mode;
+  const isNew = Store.submitBest(key, G.score);
+  if(G.mode !== "match") Store.addRight(G.right);
+  AudioFX.finish();
+
+  const grade =
+    acc >= 90 ? { e:"🏆", t:"完美通关", s:"几乎全对，单词功底很扎实" } :
+    acc >= 70 ? { e:"🎉", t: dead ? "不错，再接再厉" : "通关成功", s:"正确率不错，继续扩大战果" } :
+    acc >= 50 ? { e:"💪", t:"及格边缘", s:"错的词已进错词本，回头再看一遍" } :
+                { e:"📚", t:"需要复习", s:"别急，先把错词本过一轮" };
+
+  if(dead){ grade.e = "💔"; grade.t = "生命耗尽"; grade.s = "三条命用完了，再挑战一次吧"; }
+
+  $("rs-emoji").textContent = grade.e;
+  $("rs-title").textContent = grade.t;
+  $("rs-sub").textContent = grade.s + (isNew ? " · 刷新了最高分！" : "");
+  $("rs-score").textContent = G.score;
+
+  const cells = [
+    { b: acc + "%", s: "正确率" },
+    { b: G.right + "/" + totalAnswered, s: G.mode === "match" ? "配成对数" : "答对题数" },
+    { b: "×" + G.maxCombo, s: "最高连击" },
+    { b: fmtTime(ms), s: "用时" }
+  ];
+  if(bonus > 0) cells.push({ b: "+" + bonus, s: "速度奖励" });
+
+  $("rs-grid").innerHTML = cells.map(c =>
+    '<div class="rs-cell"><b>' + esc(c.b) + "</b><small>" + esc(c.s) + "</small></div>"
+  ).join("");
+
+  // 错词
+  const uniq = [];
+  const seen = new Set();
+  G.wrong.forEach(w => {
+    if(seen.has(w.w)) return;
+    seen.add(w.w);
+    uniq.push(w);
+  });
+
+  $("rs-wrongbox").innerHTML = uniq.length
+    ? '<h4>本次错词（' + uniq.length + "）</h4>" + uniq.map(w =>
+        '<div class="wrow"><b>' + esc(w.w) + "</b><span>" + esc(w.cn) + "</span></div>"
+      ).join("")
+    : '<h4>本次错词（0）</h4><div class="empty" style="padding:14px 0">全对，没有错词 🎊</div>';
+
+  go("s-result");
+}
+
+/* =====================================================================
+ * 13. 错词本
+ * ===================================================================*/
+function openWrongBook(){
+  const list = Store.wrongBook.slice().sort((a, b) => b.count - a.count || b.ts - a.ts);
+  $("sheet-body").innerHTML = list.length
+    ? list.map(w =>
+        '<div class="wrow"><b>' + esc(w.w) + "</b>" +
+        '<span style="flex:1">' + esc(w.cn) + "</span>" +
+        '<span style="color:var(--bad);font-weight:700">×' + w.count + "</span>" +
+        '<button class="q-speak" style="margin:0 0 0 6px;padding:4px 9px" data-speak="' + esc(w.w) + '">🔊</button>' +
+        "</div>"
+      ).join("")
+    : '<div class="empty">错词本是空的<br>答错的单词会自动收集到这里</div>';
+  $("mask").classList.add("on");
+}
+
+function closeSheet(){ $("mask").classList.remove("on"); }
+
+/* =====================================================================
+ * 14. 事件绑定（统一委托）
+ * ===================================================================*/
+document.addEventListener("click", (e) => {
+  const t = e.target;
+  const closest = (sel) => t.closest ? t.closest(sel) : null;
+
+  // 朗读按钮（全局）
+  const sp = closest("[data-speak]");
+  if(sp){ speak(sp.dataset.speak); return; }
+
+  // 首页：难度
+  const chip = closest("[data-diff]");
+  if(chip && chip.closest("#s-home")){
+    G.diff = chip.dataset.diff;
+    renderHome();
+    return;
+  }
+
+  // 首页：玩法
+  const mode = closest("[data-mode]");
+  if(mode && mode.closest("#s-home")){
+    G.mode = mode.dataset.mode;
+    renderHome();
+    return;
+  }
+
+  if(closest("#btn-start")){ startGame(); return; }
+  if(closest("#btn-wrongbook")){ openWrongBook(); return; }
+  if(closest("#sheet-close") || t.id === "mask"){ closeSheet(); return; }
+
+  // 游戏中的返回
+  if(closest("#btn-quit")){ go("s-home"); renderHome(); return; }
+
+  // 选择题选项
+  const opt = closest(".opt");
+  if(opt && !opt.disabled){ answerQuiz(opt); return; }
+
+  // 拼写：字母池 / 已填格子
+  const pb = closest("[data-pool]");
+  if(pb){ clickPool(Number(pb.dataset.pool)); return; }
+  const slot = closest("[data-slot]");
+  if(slot){ clickSlot(Number(slot.dataset.slot)); return; }
+
+  // 翻牌
+  const mc = closest("[data-card]");
+  if(mc){ clickCard(Number(mc.dataset.card)); return; }
+
+  // 结算
+  if(closest("#btn-again")){ startGame(); return; }
+  if(closest("#btn-home")){ go("s-home"); renderHome(); return; }
+});
+
+// 键盘支持（拼写模式直接敲字）
+document.addEventListener("keydown", (e) => {
+  if(!$("s-game").classList.contains("active")) return;
+  if(G.mode !== "spell" || !G.spell || G.locked) return;
+  const k = e.key.toLowerCase();
+  if(!/^[a-z]$/.test(k)) return;
+  const item = G.spell.pool.find(p => !p.used && p.ch === k);
+  if(item) clickPool(item.id);
+});
+
+/* =====================================================================
+ * 15. 启动
+ * ===================================================================*/
+renderHome();
+// 词量元信息很小，先取来用于首页显示真实词数；取不到也不影响游戏
+loadMeta().then(() => { if(WORDLIB.meta) renderHome(); });
+
+// 导出给 tools/check-wordgame.js 做词库与玩法冒烟校验
+window.__WQ__ = {
+  DIFFS, MODES, PER_ROUND, START_LIVES, QUEUE_SIZE, MATCH_PAIRS,
+  shuffle, sample, pickDistractors, loadWords, loadMeta, wordCount,
+  _test: { G, WORDLIB, startGame, answerQuiz, clickPool, clickSlot, clickCard, Store }
+};
+</script>
+</body>
+</html>
